@@ -1,0 +1,26 @@
+name: Queue issue to business-strategy
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  queue-issue-business-strategy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: octokit/graphql-action@v2.x
+        id: queue-issue-business-strategy
+        with:
+          query: |
+            mutation release($node:String!) {
+              addProjectCard(
+                input: {
+                  contentId: $node,
+                  projectColumnId: "MDEzOlByb2plY3RDb2x1bW43MTA5ODM1"
+                }
+              ) {
+                clientMutationId
+              }
+            }
+          node: ${{ github.event.issue.node_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_DSCIZTECHBOT }}
